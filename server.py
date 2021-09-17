@@ -15,3 +15,4 @@ while True:
 	msg = data.decode()
 	conn.send(data)
 	print(msg)
+conn.close()
