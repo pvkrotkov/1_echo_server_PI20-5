@@ -10,11 +10,11 @@ msg = ''
 
 while True:
 	data = conn.recv(1024)
-	if not data:
+	decoded = data.decode()
+	if decoded == 'exit':
+		conn.send('Соединение разорвано'.encode())
+		conn.close()
 		break
-	msg += data.decode()
-	conn.send(data)
-
-print(msg)
-
-conn.close()
+	else:
+		msg += data.decode()
+		conn.send(data)
