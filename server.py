@@ -15,5 +15,3 @@ while True:
 	msg = data.decode()
 	conn.send(data)
 	print(msg)
-	if data.decode() == 'exit':
-		conn.close()
