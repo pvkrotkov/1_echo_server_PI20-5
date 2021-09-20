@@ -1,20 +1,17 @@
 import socket
-
+print('создаем сокет ')
 sock = socket.socket()
-sock.bind(('', 9090))
-sock.listen(0)
-conn, addr = sock.accept()
-print(addr)
-
-msg = ''
-
-while True:
-	data = conn.recv(1024)
-	if not data:
-		break
-	msg += data.decode()
-	conn.send(data)
-
-print(msg)
-
-conn.close()
+print(' соединяем с сервером')
+sock.connect(('localhost', 9090))
+print('выход осуществляется через exit')
+while True:  
+    msg =input()
+    if msg=="exit":
+        print('разрыв соединения с сервером')
+        break
+    print('посылаем данные серверу')
+    sock.send(msg.encode())  
+    print('принимаем данные от сервера')
+    data = sock.recv(1024)
+    print(data.decode())
+sock.close() 
