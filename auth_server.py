@@ -99,7 +99,7 @@ while True:
         break
     except OSError as oserr:
         print("{} (порт {} занят)".format(oserr,con_port))
-        c_port = random.randint(1024,65533)
+        con_port = random.randint(1024,65533)
 sock.listen(0)
 print('Server is running at port {}'.format(con_port))
 
