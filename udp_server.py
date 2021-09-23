@@ -75,7 +75,7 @@ while True:
         break
     except OSError as oserr:
         print("{} (port {} unreacheable)".format(oserr,local_port))
-        local_port = random.randint(1024,65533)
+        local_port = random.randint(1024,65535)
 
 print('Server is running at port {}'.format(local_port))
 

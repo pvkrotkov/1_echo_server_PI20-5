@@ -76,7 +76,7 @@ while True:
         break
     except OSError as oserr:
         print("{} (порт {} занят)".format(oserr,c_port))
-        c_port = random.randint(1024,65533)
+        c_port = random.randint(1024,65535)
 
 sock.listen(0)
 print('Начало прослушивания порта')
