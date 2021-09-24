@@ -10,5 +10,5 @@ while True:
         break
     sock.send(msg.encode())
     data = sock.recv(1024)
-    print(data.encode())
+    print(data.decode())
 sock.close()
