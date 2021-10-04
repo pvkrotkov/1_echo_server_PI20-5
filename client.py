@@ -1,16 +1,20 @@
-import socket
-from time import sleep
+#client
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-sock = socket.socket()
-sock.setblocking(1)
-sock.connect(('10.38.165.12', 9090))
+import socket #подключаем библиотеку
 
-#msg = input()
-msg = "Hi!"
-sock.send(msg.encode())
+sock = socket.socket() #создаём сокет
+sock.connect(('localhost', 9090)) #прописываем соединение с нужным портом
+while True: #бесконечный цикл
+    message=input('Enter your message here') #отправка сообщений на сервер
+    if message=='exit': #проверка на exit - при получении вырубает циел
+        print('Connection with server was lost') #обёртка
+        break
+    encoded=message.encode() #перевод сообщения в байт-код
+    sock.send(encoded) #посылаем сообщение на сервер
 
-data = sock.recv(1024)
+    data = sock.recv(1024) #получаем ответ от сервера
+    print(data.decode()) #переводим сообщение из байт-кода
 
-sock.close()
-
-print(data.decode())
+sock.close() #закрываем соединение.
