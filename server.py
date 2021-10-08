@@ -1,13 +1,19 @@
 import socket
 
-sock=socket.socket() 
-sock.bind(('', 9090)) 
-sock.listen(0) 
-conn, addr=sock.accept() 
+sock=socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
+sock.bind(('127.0.0.1', 9090)) 
+
+clients = {}
 while True:
-    data=conn.recv(1024) 
-    if not data: 
-        conn, addr=sock.accept() 
+    data, addr=sock.recvfrom(1024) 
+    if data.decode() == "check":
+        if addr in clients:
+            sock.sendto("True".encode(), addr)
+        else:
+            sock.sendto("False".encode(), addr)
         continue
-    print(data)
-    conn.send(data.upper()) 
+    if addr not in clients:
+        clients.update({addr : data.decode()})
+        continue
+    for client in clients:
+        sock.sendto((clients[addr] + ": %s" % data.decode()).encode(), client)
