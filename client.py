@@ -1,17 +1,16 @@
 import socket
-print('создаем сокет ')
-sock = socket.socket()
-print(' соединяем с сервером')
-sock.connect(('localhost', 9090))
-print('выход осуществляется через exit')
-while True:  
-    msg =input()
-    if msg=="exit":
-        print('разрыв соединения с сервером')
-        break
-    print('посылаем данные серверу')
-    sock.send(msg.encode())  
-    print('принимаем данные от сервера')
-    data = sock.recv(1024)
-    print(data.decode())
-sock.close() 
+import threading
+def read_sok():
+     while True:
+         data = sock.recv(1024)
+         print(data.decode('utf-8'))
+server = '127.0.0.1', 9091
+U_Name = input("Input your name: ") #просим клиента ввести имя
+sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+sock.bind(('', 0))
+sock.sendto((U_Name+' Connect to server').encode('utf-8'), server)
+stream = threading.Thread(target= read_sok) # вызываем функцию read_sok
+stream.start()
+while True:
+    message = input()
+    sock.sendto(('['+U_Name+']'+message).encode('utf-8'), server) #рассылка другим клиентам
