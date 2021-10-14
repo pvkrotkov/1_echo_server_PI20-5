@@ -3,14 +3,19 @@ from time import sleep
 
 sock = socket.socket()
 sock.setblocking(1)
-sock.connect(('10.38.165.12', 9090))
+print("Соединение с сервером")
+sock.connect(('localhost', 9090))
+print("Соединено с сервером")
+while True:
+    msg = input("Сообщение серверу: ")
+    # msg = "Hi!"
+    print("Отправка данных серверу")
+    sock.send(msg.encode())
+    if msg == "exit":
+        break
+    print("Прием данных от сервера")
+    data = sock.recv(1024)
+    print(data.decode())
 
-#msg = input()
-msg = "Hi!"
-sock.send(msg.encode())
-
-data = sock.recv(1024)
-
+print("Разрыв соединения с сервером")
 sock.close()
-
-print(data.decode())
