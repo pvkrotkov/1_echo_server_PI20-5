@@ -4,8 +4,10 @@
 
 import socket #подключаем библиотеку
 
-sock = socket.socket() #создаём сокет
-sock.connect(('localhost', 9090)) #прописываем соединение с нужным портом
+UDP_MAX_SIZE=65535
+
+sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM) #создаём сокет
+sock.connect(('localhost', 8083)) #прописываем соединение с нужным портом
 while True: #бесконечный цикл
     message=input('Enter your message here') #отправка сообщений на сервер
     if message=='exit': #проверка на exit - при получении вырубает циел
@@ -14,7 +16,7 @@ while True: #бесконечный цикл
     encoded=message.encode() #перевод сообщения в байт-код
     sock.send(encoded) #посылаем сообщение на сервер
 
-    data = sock.recv(1024) #получаем ответ от сервера
+    data = sock.recvfrom(UDP_MAX_SIZE) #получаем ответ от сервера
     print(data.decode()) #переводим сообщение из байт-кода
 
 sock.close() #закрываем соединение.

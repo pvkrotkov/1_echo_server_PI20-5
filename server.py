@@ -1,21 +1,21 @@
 #server
 import socket #подключаем библиотеку
 
-sock = socket.socket() #создаём сокет
-sock.bind(('localhost',9090)) #прописываем соединение с нужным портом
-sock.listen() # <слушаем> порт
-conn, adr = sock.accept() #принимаем подключение с помощью метода accept, который возвращает кортеж с двумя элементами - сокет, адрес клиента
+#UDP_MAX_SIZE=65535
+
+sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM) #создаём сокет
+sock.bind(('localhost', 8083)) #прописываем соединение с нужным портом
+
 answer='' #для формирования ответа
 print('Server are up')#обёртка
-print(adr)#обёртка
 while True:
-    data=conn.recv(1024) #принимаем ответ
+    print(sock.recv(65535)) #для удобства тестирования
+    data, addr=sock.recv(1024) #принимаем ответ
     if not data:
         print('connection lost')
         break
     answer+=data.decode()#декодируем ответ
-    edited_answer=answer.encode() #кодируем ответ
-    conn.send(edited_answer)#посылаем ответ
+    sock.sendto(answer.encode('utf-8'), addr)##кодируем ответ u посылаем ответ
     print(answer)
     answer=''
 conn.close() #закрываем соединение.
