@@ -1,21 +1,18 @@
 import socket
-from time import sleep
-#создаем объект сокета
-sock = socket.socket()
-sock.setblocking(1) #задаем блокирующий параметр
-print("Соединение с сервером")
-sock.connect(('localhost', 9090)) #подсоединяемся к порту 9090 локального хоста
-print("Соединено с сервером")
-while True: #отправлдяем сообщения пока не exit
-    msg = input("Сообщение серверу: ") #получаем сообщение от пользователя
-    # msg = "Hi!"
-    print("Отправка данных серверу")
-    sock.send(msg.encode()) #кодируем в байты и отправляем сообщение серверу
-    if msg == "exit": #если оно было exit то прерываем цикл
-        break
-    print("Прием данных от сервера")
-    data = sock.recv(1024) #получаем сообщение от сервера
-    print(data.decode()) #печатаем полученное
+import threading
 
-print("Разрыв соединения с сервером")
-sock.close() #закрываем сокет
+#функция через которую будем слушать сервер
+def listening(sock):
+     while True:
+         data, server = sock.recvfrom(1024) #получаем сообщение
+         print(data.decode()) #выводим на экран
+
+
+username = input("Введите имя: ") #получаем имя пользователя для чата
+sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM) #Создаем UDP сокет
+sock.sendto((f"Привет, я {username}").encode(), ('localhost', 9090)) #отправляем приветственное сообщение
+threading.Thread(target = listening, args = (sock, )).start() # создаем поток прослушивания сообщений от сервера
+print('Переписка начата!')
+while True: #бесконечно получаем сообщения и отправляем в чат
+    message = input()
+    sock.sendto((username+": "+message).encode(), ('localhost', 9090)) #отправляем сообщение
