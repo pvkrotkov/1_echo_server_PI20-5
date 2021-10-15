@@ -1,15 +1,22 @@
 import socket
 
-sock = socket.socket()
-sock.setblocking(1)
-sock.connect(('127.0.0.1', 9090))
-print('Соединение с сервером')
-msg = input()
+client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-sock.send(msg.encode())
-print('Отправка данных серверу')
-data = sock.recv(1024)
-print('Прием данных')
-sock.close()
+while True:
 
-print(data.decode())
+    print('Введите сообщение')
+    msg = input()
+    client.sendto(msg.encode('utf-8'), ('127.0.0.1', 9090))
+
+    msgfromserver = client.recv(1024).decode("utf-8")
+    print('Получение ответа от сервера')
+
+    if msgfromserver=='выход':
+        break
+        
+    print('Ответ сервера: ', msgfromserver)
+
+client.close()
+
+
+

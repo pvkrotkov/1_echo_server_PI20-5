@@ -1,26 +1,24 @@
 import socket
 
-sock = socket.socket()
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind(('127.0.0.1', 9090))
 print('Запуск сервера')
-sock.listen(0)
-print('Начало прослушивания порта')
-
-msg = ''
 
 while True:
-	conn, addr = sock.accept()
-	print(addr)
-	print('Подключение клиента')
-	data = conn.recv(1024)
-	if  data.decode()=='exit':
-		print('Отключение клиента')
+
+	data, addr = sock.recvfrom(1024)
+	print('Получение ответа от клиента')
+	msgfromclient=data.decode('utf-8')
+
+	if msgfromclient=='выход':
 		break
-	msg += data.decode()
-	conn.send(data)
+		
+	print('Ответ клиента: ', msgfromclient)
+
+	reply = input('Введите сообщение ')
+	sock.sendto(reply.encode('utf-8'), addr)
+
+sock.close()	
 
 
-	print(msg)
-
-conn.close()
 
