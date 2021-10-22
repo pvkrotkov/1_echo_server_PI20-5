@@ -1,47 +1,36 @@
-@@ -1,20 +1,28 @@
- import socket
- def listening():
-     sock = socket.socket()
-     sock.bind(('', 9090))
-     sock.listen(0)
-     conn, addr = sock.accept()
-     print('connection established ', addr)
-     ret=False
-     msg = ''
-
- sock = socket.socket()
- sock.bind(('', 9090))
- sock.listen(0)
- conn, addr = sock.accept()
- print(addr)
-
- msg = ''
-
- while True:
- 	data = conn.recv(1024)
- 	if not data:
- 		break
- 	msg += data.decode()
- 	conn.send(data)
-
- print(msg)
-
- conn.close()
-     while True:
-         data = conn.recv(1024)
-         msg = data.decode()
-         print(msg)
-         if msg == 'exit':
-             ret=True
-             break
-         if not data:
-             break
-         conn.send(data)
-     print("connetion lost ", addr)
-     conn.close()
-     return ret
- print('При разрыве соединения сервер продолжает работать
- При получении команды exit - завершает работу')
- ret=False
- while not ret:
-     ret=listening()
+import socket 
+print ('Создается сокет')
+sock=socket.socket()
+sock.bind(('localhost',9090))#установили хост и сервер
+print('режим прослушивания')
+sock.listen()
+print('принимаем подключение клиента к серверу')
+conn,addr=sock.accept()
+print(addr)
+msg=''
+print('считываем данные от клиента порциями по кб')
+sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+sock.bind (('',9091))
+client = [] # Массив где храним адреса клиентов
+print ('server online')
+while True:
+    print('отправка данных клиенту')
+    data=conn.recv(1024)
+    if not data:
+        break
+    msg += data.decode()
+    conn.send(data)
+    print(msg)
+    msg=''
+print('отключение клиента')
+print('остановка сервера')
+conn.close()
+data ,address = sock.recvfrom(1024)
+print (address[0], address[1]) #выводим информацию об ip и хосте
+if address not in client :
+    client.append(address)
+    for clients in client :
+        if clients == address :
+            continue
+            sock.sendto(data,clients)
+print('Server is shutting down')
