@@ -7,7 +7,7 @@ def connect(ip, port):
     print("Connecting to the server...")
 
     try:
-        sock.connect(ip, port)
+        sock.connect((ip, port))
     except ConnectionRefusedError as err:
         print(err)
         return False
@@ -20,8 +20,8 @@ def connect(ip, port):
             data = sock.recv(1024)
         except socket.timeout:
             break
-        print("Message received")
-        print(data.decode())
+    print("Message received")
+    print(data.decode())
 
     while True:
         msg = input("Typing a message to server >>> ")
@@ -39,9 +39,9 @@ def connect(ip, port):
     sock.close()
     return True
 
-ip = getpass.getpass(promt = "Write the ip address >>> ")
+ip = getpass.getpass(prompt = "Write the ip address >>> ")
 if ip == "":
-    ip = "192.168.1.69"
+    ip = "127.0.0.1"
 port = getpass.getpass(prompt = "Write the port >>> ")
 if port == "":
     port = 12345
